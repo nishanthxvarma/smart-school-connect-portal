@@ -16,14 +16,21 @@ export async function GET(req: NextRequest) {
     if (user.role === 'STUDENT') {
       filter.classId = user.classId;
     } else if (user.role === 'PARENT') {
-      // Fetch homework for all children of this parent
+      const studentId = searchParams.get('studentId');
       const parentProfile = await prisma.parent.findUnique({
         where: { userId: user.id },
         include: { students: true }
       });
       if (!parentProfile) return errorResponse('Parent profile not found', 404);
-      const childClassIds = parentProfile.students.map(s => s.classId);
-      filter.classId = { in: childClassIds };
+      const childIds = parentProfile.students.map(s => s.id);
+      
+      if (studentId && childIds.includes(studentId)) {
+        const studentObj = parentProfile.students.find(s => s.id === studentId);
+        filter.classId = studentObj?.classId;
+      } else {
+        const childClassIds = parentProfile.students.map(s => s.classId);
+        filter.classId = { in: childClassIds };
+      }
     } else if (user.role === 'TEACHER') {
       if (classId) {
         filter.classId = classId;

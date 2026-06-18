@@ -67,8 +67,8 @@ export default function LoginPage() {
           <School className="w-8 h-8 text-white" />
         </div>
         <div>
-          <h1 className="text-2xl font-bold tracking-wide">SMART CONNECT</h1>
-          <p className="text-xs text-blue-300 font-medium">GOVERNMENT HIGH SCHOOL PORTAL</p>
+          <h1 className="text-xl font-bold tracking-wide">STUDENT ANALYTICS PORTAL</h1>
+          <p className="text-xs text-blue-300 font-medium">ACADEMIC & PERFORMANCE INSIGHTS</p>
         </div>
       </div>
 
@@ -146,47 +146,8 @@ export default function LoginPage() {
             </button>
           </form>
         </div>
-
-        {/* Demo Credentials Quick-Click Board */}
-        <div className="bg-slate-50 border-t border-slate-100 p-6">
-          <div className="flex items-center gap-2 mb-3 text-slate-700 font-semibold text-sm">
-            <ShieldCheck className="w-4 h-4 text-blue-600" />
-            <h3>Demo Login Credentials</h3>
-          </div>
-          <p className="text-xs text-slate-500 mb-4">Click any profile below to pre-fill the form:</p>
-          <div className="grid grid-cols-2 gap-2 text-xs">
-            <button
-              onClick={() => fillCredentials('admin', 'admin123')}
-              className="bg-white hover:bg-blue-50 border border-slate-200 hover:border-blue-300 p-2.5 rounded-xl text-left transition-all font-medium text-slate-700 active:scale-98 shadow-sm flex flex-col gap-0.5"
-            >
-              <span className="text-[10px] text-blue-600 font-semibold tracking-wider">ADMIN</span>
-              <span className="truncate">admin / admin123</span>
-            </button>
-            <button
-              onClick={() => fillCredentials('teacher', 'teacher123')}
-              className="bg-white hover:bg-blue-50 border border-slate-200 hover:border-blue-300 p-2.5 rounded-xl text-left transition-all font-medium text-slate-700 active:scale-98 shadow-sm flex flex-col gap-0.5"
-            >
-              <span className="text-[10px] text-emerald-600 font-semibold tracking-wider">TEACHER</span>
-              <span className="truncate">teacher / teacher123</span>
-            </button>
-            <button
-              onClick={() => fillCredentials('parent', 'parent123')}
-              className="bg-white hover:bg-blue-50 border border-slate-200 hover:border-blue-300 p-2.5 rounded-xl text-left transition-all font-medium text-slate-700 active:scale-98 shadow-sm flex flex-col gap-0.5"
-            >
-              <span className="text-[10px] text-purple-600 font-semibold tracking-wider">PARENT</span>
-              <span className="truncate">parent / parent123</span>
-            </button>
-            <button
-              onClick={() => fillCredentials('student', 'student123')}
-              className="bg-white hover:bg-blue-50 border border-slate-200 hover:border-blue-300 p-2.5 rounded-xl text-left transition-all font-medium text-slate-700 active:scale-98 shadow-sm flex flex-col gap-0.5"
-            >
-              <span className="text-[10px] text-amber-600 font-semibold tracking-wider">STUDENT</span>
-              <span className="truncate">student / student123</span>
-            </button>
-          </div>
-        </div>
       </div>
-      <p className="text-slate-400 text-xs mt-6">© 2026 Smart School Connect Portal. All rights reserved.</p>
+      <p className="text-slate-400 text-xs mt-6">© 2026 Student Analytics Portal. All rights reserved.</p>
     </div>
   );
 }

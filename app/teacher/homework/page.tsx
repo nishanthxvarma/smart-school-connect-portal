@@ -38,6 +38,37 @@ export default function TeacherHomeworkPage() {
   const [description, setDescription] = useState('');
   const [dueDate, setDueDate] = useState('');
   const [resourceUrl, setResourceUrl] = useState('');
+  const [uploading, setUploading] = useState(false);
+
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setUploading(true);
+    setError(null);
+
+    const formData = new FormData();
+    formData.append('file', file);
+
+    try {
+      const res = await fetch('/api/upload', {
+        method: 'POST',
+        body: formData
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        setResourceUrl(data.fileUrl);
+      } else {
+        const errData = await res.json();
+        setError(errData.error || 'Failed to upload attachment.');
+      }
+    } catch (err) {
+      setError('Connection error during upload.');
+    } finally {
+      setUploading(false);
+    }
+  };
 
   const fetchData = async () => {
     try {
@@ -270,7 +301,10 @@ export default function TeacherHomeworkPage() {
               </div>
 
               <div>
-                <label className="block text-[10px] font-bold uppercase text-slate-500 mb-1">Attachment URL / Study Link (Optional)</label>
+                <div className="flex justify-between items-center mb-1">
+                  <label className="block text-[10px] font-bold uppercase text-slate-500">Attachment URL / Study Link (Optional)</label>
+                  <span className="text-[9px] text-slate-400 font-bold uppercase">Or Upload Below</span>
+                </div>
                 <input
                   type="url"
                   placeholder="https://drive.google.com/..."
@@ -278,6 +312,27 @@ export default function TeacherHomeworkPage() {
                   onChange={(e) => setResourceUrl(e.target.value)}
                   className="block w-full p-2 border border-slate-200 rounded-lg text-xs"
                 />
+              </div>
+
+              <div>
+                <label className="block text-[10px] font-bold uppercase text-slate-500 mb-1">Upload Homework PDF or Image (Optional)</label>
+                <input
+                  type="file"
+                  accept=".pdf,image/*"
+                  onChange={handleFileUpload}
+                  disabled={uploading}
+                  className="block w-full text-xs text-slate-500 file:mr-4 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 border border-slate-200 rounded-lg p-1"
+                />
+                {uploading && (
+                  <span className="text-[10px] text-blue-500 font-semibold mt-1 flex items-center gap-1">
+                    <Loader2 className="w-3 h-3 animate-spin" /> Uploading file...
+                  </span>
+                )}
+                {resourceUrl && !uploading && (
+                  <span className="text-[10px] text-emerald-600 font-semibold mt-1 block">
+                    ✓ Attached: {resourceUrl.substring(resourceUrl.lastIndexOf('/') + 1)}
+                  </span>
+                )}
               </div>
 
               <div>

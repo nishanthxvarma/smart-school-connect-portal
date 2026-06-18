@@ -28,6 +28,7 @@ export default function AdminClassesPage() {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  const [editingClass, setEditingClass] = useState<ClassItem | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [name, setName] = useState('');
   const [teacherId, setTeacherId] = useState('');
@@ -62,10 +63,38 @@ export default function AdminClassesPage() {
   }, []);
 
   const openAddModal = () => {
+    setEditingClass(null);
     setName('');
     setTeacherId('');
     setError(null);
     setIsModalOpen(true);
+  };
+
+  const openEditModal = (cls: ClassItem) => {
+    setEditingClass(cls);
+    setName(cls.name);
+    setTeacherId(cls.teacherId || '');
+    setError(null);
+    setIsModalOpen(true);
+  };
+
+  const handleDelete = async (id: string) => {
+    if (!confirm('Are you sure you want to delete this class? This will unassign any students currently in this class.')) return;
+
+    try {
+      const res = await fetch(`/api/classes/${id}`, {
+        method: 'DELETE'
+      });
+
+      if (res.ok) {
+        fetchData();
+      } else {
+        const errData = await res.json();
+        alert(errData.error || 'Failed to delete class.');
+      }
+    } catch (err) {
+      alert('Error connecting to server.');
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -80,18 +109,27 @@ export default function AdminClassesPage() {
     }
 
     try {
-      const res = await fetch('/api/classes', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, teacherId: teacherId || undefined })
-      });
+      let res;
+      if (editingClass) {
+        res = await fetch(`/api/classes/${editingClass.id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, teacherId: teacherId || '' })
+        });
+      } else {
+        res = await fetch('/api/classes', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, teacherId: teacherId || undefined })
+        });
+      }
 
       if (res.ok) {
         setIsModalOpen(false);
         fetchData();
       } else {
         const errData = await res.json();
-        setError(errData.error || 'Failed to create class.');
+        setError(errData.error || 'Failed to save class.');
       }
     } catch (err) {
       setError('Error connecting to backend.');
@@ -138,8 +176,25 @@ export default function AdminClassesPage() {
           {classes.map((cls) => (
             <div 
               key={cls.id} 
-              className="bg-white border border-slate-100 p-5 rounded-2xl shadow-sm space-y-4 hover:shadow-md transition-all flex flex-col justify-between"
+              className="bg-white border border-slate-100 p-5 rounded-2xl shadow-sm space-y-4 hover:shadow-md transition-all flex flex-col justify-between relative group"
             >
+              <div className="absolute top-4 right-4 flex gap-1 opacity-0 group-hover:opacity-100 transition-all">
+                <button
+                  onClick={() => openEditModal(cls)}
+                  className="p-1 rounded border border-slate-200 hover:bg-slate-50 hover:text-blue-600 text-slate-400 transition-all"
+                  title="Edit Class"
+                >
+                  <Edit2 className="w-3.5 h-3.5" />
+                </button>
+                <button
+                  onClick={() => handleDelete(cls.id)}
+                  className="p-1 rounded border border-slate-200 hover:bg-rose-50 hover:text-rose-600 text-slate-400 transition-all"
+                  title="Delete Class"
+                >
+                  <Trash2 className="w-3.5 h-3.5" />
+                </button>
+              </div>
+
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
@@ -169,12 +224,12 @@ export default function AdminClassesPage() {
         </div>
       )}
 
-      {/* Add Class Modal */}
+      {/* Add/Edit Class Modal */}
       {isModalOpen && (
         <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex justify-center items-center p-4 z-50">
           <div className="bg-white rounded-2xl shadow-xl w-full max-w-md overflow-hidden animate-scale-up border border-slate-100">
             <div className="bg-slate-900 text-white p-5 flex items-center justify-between">
-              <h3 className="font-bold text-sm">Create Academic Class</h3>
+              <h3 className="font-bold text-sm">{editingClass ? 'Modify Academic Class' : 'Create Academic Class'}</h3>
               <button onClick={() => setIsModalOpen(false)} className="text-slate-400 hover:text-white">✕</button>
             </div>
             
@@ -226,7 +281,7 @@ export default function AdminClassesPage() {
                   className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-semibold flex items-center gap-1"
                 >
                   {submitting && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
-                  Create Class
+                  {editingClass ? 'Save Changes' : 'Create Class'}
                 </button>
               </div>
             </form>

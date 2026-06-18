@@ -14,15 +14,47 @@ interface AttendanceItem {
   markedBy: { user: { name: string } };
 }
 
+interface ChildItem {
+  studentId: string;
+  name: string;
+}
+
 export default function ParentAttendancePage() {
   const [logs, setLogs] = useState<AttendanceItem[]>([]);
+  const [children, setChildren] = useState<ChildItem[]>([]);
+  const [selectedChildId, setSelectedChildId] = useState<string>('');
+  
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  // 1. Fetch children metadata
   useEffect(() => {
+    async function fetchChildren() {
+      try {
+        const res = await fetch('/api/stats');
+        if (res.ok) {
+          const data = await res.json();
+          if (data.children && data.children.length > 0) {
+            setChildren(data.children);
+            setSelectedChildId(data.children[0].studentId);
+          }
+        }
+      } catch (err) {
+        console.error('Error fetching children list:', err);
+      }
+    }
+    fetchChildren();
+  }, []);
+
+  // 2. Fetch attendance when selectedChildId changes
+  useEffect(() => {
+    if (!selectedChildId) return;
+
     async function fetchAttendance() {
       try {
-        const res = await fetch('/api/attendance');
+        setLoading(true);
+        setError(null);
+        const res = await fetch(`/api/attendance?studentId=${selectedChildId}`);
         if (res.ok) {
           const data = await res.json();
           setLogs(data);
@@ -36,7 +68,7 @@ export default function ParentAttendancePage() {
       }
     }
     fetchAttendance();
-  }, []);
+  }, [selectedChildId]);
 
   const getStatusBadge = (status: string) => {
     switch (status) {
@@ -53,9 +85,30 @@ export default function ParentAttendancePage() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h2 className="text-xl sm:text-2xl font-bold text-slate-800">Child Attendance Logs</h2>
-        <p className="text-sm text-slate-500">Track and monitor your child&apos;s daily attendance record and remarks</p>
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div>
+          <h2 className="text-xl sm:text-2xl font-bold text-slate-800">Child Attendance Logs</h2>
+          <p className="text-sm text-slate-500">Track and monitor your child&apos;s daily attendance record and remarks</p>
+        </div>
+
+        {/* Child Selection Tabs */}
+        {children.length > 1 && (
+          <div className="flex gap-1.5 p-1 bg-slate-100 rounded-xl shrink-0">
+            {children.map((child) => (
+              <button
+                key={child.studentId}
+                onClick={() => setSelectedChildId(child.studentId)}
+                className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all active:scale-95 ${
+                  selectedChildId === child.studentId
+                    ? 'bg-white text-blue-600 shadow-sm'
+                    : 'text-slate-500 hover:text-slate-700'
+                }`}
+              >
+                {child.name}
+              </button>
+            ))}
+          </div>
+        )}
       </div>
 
       {loading ? (

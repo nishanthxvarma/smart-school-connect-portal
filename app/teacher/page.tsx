@@ -203,13 +203,6 @@ export default function TeacherDashboard() {
               <span>Grade Student Tests</span>
               <ArrowRight className="w-4 h-4 text-slate-400" />
             </Link>
-            <Link 
-              href="/teacher/resources"
-              className="flex items-center justify-between p-3.5 bg-slate-50 rounded-xl hover:bg-blue-50 border border-slate-100 hover:border-blue-100 text-slate-700 hover:text-blue-700 font-semibold text-xs transition-all active:scale-98"
-            >
-              <span>Upload Study Materials</span>
-              <ArrowRight className="w-4 h-4 text-slate-400" />
-            </Link>
           </div>
         </div>
 

@@ -36,7 +36,6 @@ export default function Sidebar({ user }: SidebarProps) {
     { name: 'Homework Board', href: '/teacher/homework', icon: ClipboardList },
     { name: 'Attendance Manager', href: '/teacher/attendance', icon: UserCheck },
     { name: 'Student Marks', href: '/teacher/marks', icon: FileText },
-    { name: 'Study Resources', href: '/teacher/resources', icon: BookOpen },
     { name: 'PTM Appointments', href: '/teacher/appointments', icon: MessageSquare },
     { name: 'School Calendar', href: '/teacher/calendar', icon: Calendar }
   ];
@@ -47,8 +46,8 @@ export default function Sidebar({ user }: SidebarProps) {
     { name: 'Child Homework', href: '/parent/homework', icon: ClipboardList },
     { name: 'Child Attendance', href: '/parent/attendance', icon: UserCheck },
     { name: 'Academic Results', href: '/parent/marks', icon: FileText },
-    { name: 'PTM Appointments', href: '/parent/appointments', icon: MessageSquare },
     { name: 'School Calendar', href: '/parent/calendar', icon: Calendar },
+    { name: 'PTM Appointments', href: '/parent/appointments', icon: MessageSquare },
     { name: 'Suggestions / Feedback', href: '/parent/feedback', icon: Award },
     { name: 'Report Infrastructure Issue', href: '/parent/issues', icon: AlertTriangle }
   ];
@@ -87,8 +86,8 @@ export default function Sidebar({ user }: SidebarProps) {
           <School className="w-6 h-6" />
         </div>
         <div>
-          <h2 className="font-bold text-white tracking-wide text-sm">SMART SCHOOL</h2>
-          <span className="text-[10px] text-blue-400 font-semibold tracking-wider uppercase">{user.role} PORTAL</span>
+          <h2 className="font-bold text-white tracking-wide text-xs">STUDENT ANALYTICS</h2>
+          <span className="text-[10px] text-blue-400 font-semibold tracking-wider uppercase">PORTAL ({user.role})</span>
         </div>
       </div>
 
@@ -138,7 +137,7 @@ export default function Sidebar({ user }: SidebarProps) {
       <header className="md:hidden flex items-center justify-between bg-slate-900 text-white p-4 sticky top-0 z-30 shadow-md">
         <div className="flex items-center gap-2">
           <School className="w-5 h-5 text-blue-500" />
-          <h1 className="font-bold text-sm tracking-wide">SMART SCHOOL</h1>
+          <h1 className="font-bold text-xs tracking-wide">STUDENT ANALYTICS PORTAL</h1>
         </div>
         <button 
           onClick={() => setMobileOpen(!mobileOpen)}

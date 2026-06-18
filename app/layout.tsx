@@ -14,8 +14,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'Smart School Connect Portal',
-  description: 'A modern full-stack school portal bridging teachers, parents, students, and admins.',
+  title: 'Student Analytics Portal',
+  description: 'A modern school analytics portal bridging teachers, parents, students, and admins.',
 };
 
 export default function RootLayout({

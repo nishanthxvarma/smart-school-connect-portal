@@ -55,8 +55,8 @@ export default function Sidebar({ user }: SidebarProps) {
 
   const studentLinks = [
     { name: 'Dashboard', href: '/student', icon: LayoutDashboard },
+    { name: 'Notice Board', href: '/student/notices', icon: Bell },
     { name: 'My Homework', href: '/student/homework', icon: ClipboardList },
-    { name: 'Learning Resources', href: '/student/resources', icon: BookOpen },
     { name: 'My Performance', href: '/student/marks', icon: Award },
     { name: 'My Attendance', href: '/student/attendance', icon: UserCheck },
     { name: 'School Calendar', href: '/student/calendar', icon: Calendar },

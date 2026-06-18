@@ -25,6 +25,7 @@ export default function Sidebar({ user }: SidebarProps) {
     { name: 'Dashboard', href: '/admin', icon: LayoutDashboard },
     { name: 'Manage Users', href: '/admin/users', icon: Users },
     { name: 'Manage Classes', href: '/admin/classes', icon: ClipboardList },
+    { name: 'Notice Board', href: '/admin/notices', icon: Bell },
     { name: 'Infrastructure Issues', href: '/admin/issues', icon: AlertTriangle },
     { name: 'Calendar & Events', href: '/admin/calendar', icon: Calendar },
     { name: 'School Reports', href: '/admin/reports', icon: FileText }

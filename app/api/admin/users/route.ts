@@ -6,7 +6,7 @@ import bcrypt from 'bcryptjs';
 export async function GET(req: NextRequest) {
   try {
     const user = await getSessionUser();
-    if (!user || user.role !== 'ADMIN') {
+    if (!user || (user.role !== 'ADMIN' && user.role !== 'TEACHER')) {
       return errorResponse('Unauthorized', 403);
     }
 

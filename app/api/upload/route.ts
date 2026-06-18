@@ -1,6 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { promises as fs } from 'fs';
-import path from 'path';
+import { NextRequest } from 'next/server';
 import { getSessionUser, errorResponse, successResponse } from '@/lib/api-helper';
 
 export async function POST(req: NextRequest) {
@@ -16,24 +14,12 @@ export async function POST(req: NextRequest) {
     }
 
     const buffer = Buffer.from(await file.arrayBuffer());
-    
-    // Create safe filename
-    const originalName = (file as any).name || 'upload.bin';
-    const extension = path.extname(originalName);
-    const filename = `${Date.now()}-${Math.random().toString(36).substring(2, 8)}${extension}`;
-    
-    const uploadDir = path.join(process.cwd(), 'public', 'uploads', 'homework');
-    
-    // Ensure directory exists
-    await fs.mkdir(uploadDir, { recursive: true });
-    
-    // Write file
-    const filePath = path.join(uploadDir, filename);
-    await fs.writeFile(filePath, buffer);
+    const base64String = buffer.toString('base64');
+    const mimeType = file.type || 'application/octet-stream';
+    const fileUrl = `data:${mimeType};base64,${base64String}`;
 
-    const fileUrl = `/uploads/homework/${filename}`;
     return successResponse({ fileUrl });
   } catch (err: any) {
-    return errorResponse(err.message, 550);
+    return errorResponse(err.message, 500);
   }
 }
